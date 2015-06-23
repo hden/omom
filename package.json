@@ -1,0 +1,37 @@
+{
+  "name": "omom",
+  "version": "0.0.0",
+  "description": "Bite-sized virtual-dom",
+  "main": "index.js",
+  "scripts": {
+    "test": "make testci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hden/omom.git"
+  },
+  "keywords": [
+    "virtual",
+    "dom",
+    "react",
+    "virtual-dom"
+  ],
+  "author": "Hao-kang Den <haokang.den@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hden/omom/issues"
+  },
+  "homepage": "https://github.com/hden/omom#readme",
+  "dependencies": {
+    "raf": "^3.0.0",
+    "virtual-dom": "^2.0.1"
+  },
+  "devDependencies": {
+    "babelify": "^6.1.2",
+    "chai-jquery": "^2.0.0",
+    "eslint": "^0.23.0",
+    "immutable": "^3.7.4",
+    "phantomjs": "^1.9.17",
+    "zuul": "^3.0.0"
+  }
+}

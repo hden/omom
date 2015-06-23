@@ -1,0 +1,47 @@
+{
+  "ecmaFeatures": {
+    "jsx": true,
+    "modules": true
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jquery": true,
+    "mocha": true
+  },
+  "globals": {
+    "chai": true,
+    "sinon": true
+  },
+  "rules": {
+    "brace-style": [1, "1tbs", { "allowSingleLine": true }],
+    "comma-style": [2, "first"],
+    "eol-last": 1,
+    "global-strict": 0,
+    "indent": [2, 2],
+    "key-spacing": [2, {
+      "align": "colon",
+      "beforeColon": false,
+      "afterColon": true
+    }],
+    "no-var": 1,
+    "no-multiple-empty-lines": [1, { "max": 1 }],
+    "no-multi-spaces": [2, {
+      "exceptions": {
+        "Property": true,
+        "ImportDeclaration": true,
+        "VariableDeclarator": true,
+        "AssignmentExpression": true
+      }
+    }],
+    "no-unused-expressions": 0,
+    "no-unused-vars": 1,
+    "no-trailing-spaces": 2,
+    "object-shorthand": [1, "always"],
+    "quotes": [2, "single", "avoid-escape"],
+    "semi": [2, "never"],
+    "space-after-keywords": 1,
+    "space-before-blocks": 1,
+    "strict": [2, "global"]
+  }
+}
