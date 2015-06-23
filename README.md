@@ -47,10 +47,10 @@ update({className: 'foobar', items: ['foo', 'bar', 'baz']})
 
     make test
 
-
 ## Inspirations
 
 * Rob Pike's [state functions](http://cuddle.googlecode.com/hg/talk/lex.html#slide-17)
+* Mike Bostock's [Reusable Charts](http://bost.ocks.org/mike/chart/)
 * [virtual-dom](https://github.com/Matt-Esch/virtual-dom)
 * [mercury](https://github.com/Raynos/mercury)
 * [deku](http://github.com/segmentio/deku)
