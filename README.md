@@ -5,34 +5,34 @@ Bite-sized virtual-dom
 
 ### Hello world
 
-    ```js
-    /** @jsx h */
-    import {h, loop, component} from 'omom'
+```js
+/** @jsx h */
+import {h, loop, component} from 'omom'
 
-    let List = component(({items}) => {
-      items = items.map((item) => {
-        return <li>{item}</li>
-      })
+let List = component(({items}) => {
+  items = items.map((item) => {
+    return <li>{item}</li>
+  })
 
-      return (
-        <ul>{items}</ul>
-      )
-    })
+  return (
+    <ul>{items}</ul>
+  )
+})
 
-    let app = ({className, items}) => {
-      return (
-        <div className={className}>
-          <List items={items} />
-        </div>
-      )
-    }
+let app = ({className, items}) => {
+  return (
+    <div className={className}>
+      <List items={items} />
+    </div>
+  )
+}
 
-    let createInitialState = loop(document.body, render)
-    let update = createInitialState({className: 'foobar', items: ['foo', 'bar']})
+let createInitialState = loop(document.body, render)
+let update = createInitialState({className: 'foobar', items: ['foo', 'bar']})
 
-    // performs update
-    update({className: 'foobar', items: ['foo', 'bar', 'baz']})
-    ```
+// performs update
+update({className: 'foobar', items: ['foo', 'bar', 'baz']})
+```
 
 ## Installation
 
