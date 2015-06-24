@@ -6,6 +6,7 @@ describe('action', () => {
 
   it('is a function', () => {
     expect(createActions).to.be.a('function')
+    expect(createActions()).to.be.a('function')
   })
 
   it('expose actions as methods', () => {
@@ -25,7 +26,7 @@ describe('action', () => {
   })
 
   it('dispatch actions', () => {
-    let action = createActions(['foo', 'bar'])
+    let action = createActions(['foo', 'bar', 'nyan'])
     let store  = {
       onFoo: sinon.spy()
     , onBar: sinon.spy()
