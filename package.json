@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/hden/omom#readme",
   "dependencies": {
+    "eventemitter3": "^1.1.1",
     "raf": "^3.0.0",
     "virtual-dom": "^2.0.1"
   },

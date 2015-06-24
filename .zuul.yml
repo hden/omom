@@ -3,8 +3,6 @@ browsers:
   - name: chrome
     version: latest
 browserify:
-  # - require: ./test/index.js
-  #   entry: true
   - transform: babelify
 scripts:
   - "http://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.min.js"
