@@ -1,5 +1,5 @@
 export default {
-  sandbox: () => {
+  sandbox() {
     const iframe = document.createElement('iframe')
     document.body.appendChild(iframe)
     const el = iframe.contentDocument.body
