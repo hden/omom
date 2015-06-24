@@ -1,4 +1,5 @@
 // test enviroment
+import 'phantomjs-polyfill'
 import addon from 'chai-jquery'
 chai.use(addon)
 
