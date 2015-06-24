@@ -45,6 +45,10 @@ describe('component', () => {
 
     expect(spy).to.have.property('calledTwice', true)
     expect(result).to.equal(data)
+
+    result = render(data, ['foo'])
+    expect(spy).to.have.property('calledThrice', true)
+    expect(result).to.equal(data)
   })
 
   it('should work with custom equality fn', () => {
