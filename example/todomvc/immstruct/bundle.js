@@ -37,12 +37,12 @@ spy.emit = function () {
   return emit.apply(spy, args);
 };
 
-var todoActions = ['create', 'updateText', 'toggleComplete', 'toggleEditing', 'toggleAll', 'destroy', 'destroyCompleted'];
+var todoActions = ['create', 'updateText', 'toggleComplete', 'toggleEditing', 'toggleAll', 'destroy', 'destroyCompleted', 'setFilter'];
 
 exports['default'] = _index2['default'].action(todoActions, spy);
 module.exports = exports['default'];
 
-},{"../../../../index":118,"debug":104,"eventemitter3":119}],2:[function(require,module,exports){
+},{"../../../../index":117,"debug":104,"eventemitter3":118}],2:[function(require,module,exports){
 /** @jsx omom.h */
 'use strict';
 
@@ -66,8 +66,9 @@ var _todoTextInput2 = _interopRequireDefault(_todoTextInput);
 
 var log = window.debug('todomvc:footer');
 
-exports['default'] = _index2['default'].component(function (items /* cursor */) {
-
+exports['default'] = _index2['default'].component(function (root /* cursor */) {
+  var items = root.cursor('items');
+  var filter = root.cursor('filter').deref();
   var total = items.size;
   var completed = 0;
   items.forEach(function (item) {
@@ -108,7 +109,11 @@ exports['default'] = _index2['default'].component(function (items /* cursor */) 
         null,
         _index2['default'].h(
           'a',
-          { href: '#/' },
+          {
+            href: '#/',
+            className: _index2['default'].cx({ selected: filter === 'all' }),
+            onclick: _actionsTodoAction2['default'].setFilter.bind(_actionsTodoAction2['default'], 'all')
+          },
           'All'
         )
       ),
@@ -118,7 +123,11 @@ exports['default'] = _index2['default'].component(function (items /* cursor */) 
         null,
         _index2['default'].h(
           'a',
-          { href: '#/active' },
+          {
+            href: '#/active',
+            className: _index2['default'].cx({ selected: filter === 'active' }),
+            onclick: _actionsTodoAction2['default'].setFilter.bind(_actionsTodoAction2['default'], 'active')
+          },
           'Active'
         )
       ),
@@ -128,7 +137,11 @@ exports['default'] = _index2['default'].component(function (items /* cursor */) 
         null,
         _index2['default'].h(
           'a',
-          { href: '#/completed' },
+          {
+            href: '#/completed',
+            className: _index2['default'].cx({ selected: filter === 'completed' }),
+            onclick: _actionsTodoAction2['default'].setFilter.bind(_actionsTodoAction2['default'], 'completed')
+          },
           'Completed'
         )
       ),
@@ -139,7 +152,7 @@ exports['default'] = _index2['default'].component(function (items /* cursor */) 
 });
 module.exports = exports['default'];
 
-},{"../../../../index":118,"../actions/todoAction":1,"./todoTextInput":7}],3:[function(require,module,exports){
+},{"../../../../index":117,"../actions/todoAction":1,"./todoTextInput":7}],3:[function(require,module,exports){
 /** @jsx omom.h */
 'use strict';
 
@@ -169,18 +182,18 @@ var _mainSection = require('./mainSection');
 
 var _mainSection2 = _interopRequireDefault(_mainSection);
 
-exports['default'] = _index2['default'].component(function (items /* cursor */) {
+exports['default'] = _index2['default'].component(function (root /* cursor */) {
   return _index2['default'].h(
     'div',
     null,
     _index2['default'].h(_header2['default'], null),
-    _index2['default'].h(_mainSection2['default'], items),
-    _index2['default'].h(_Footer2['default'], items)
+    _index2['default'].h(_mainSection2['default'], root),
+    _index2['default'].h(_Footer2['default'], root)
   );
 });
 module.exports = exports['default'];
 
-},{"../../../../index":118,"../actions/todoAction":1,"./Footer":2,"./header":4,"./mainSection":5}],4:[function(require,module,exports){
+},{"../../../../index":117,"../actions/todoAction":1,"./Footer":2,"./header":4,"./mainSection":5}],4:[function(require,module,exports){
 /** @jsx omom.h */
 'use strict';
 
@@ -220,7 +233,7 @@ exports['default'] = _index2['default'].component(function () {
 });
 module.exports = exports['default'];
 
-},{"../../../../index":118,"../actions/todoAction":1,"./todoTextInput":7}],5:[function(require,module,exports){
+},{"../../../../index":117,"../actions/todoAction":1,"./todoTextInput":7}],5:[function(require,module,exports){
 /** @jsx omom.h */
 'use strict';
 
@@ -242,13 +255,29 @@ var _todoItem = require('./todoItem');
 
 var _todoItem2 = _interopRequireDefault(_todoItem);
 
-exports['default'] = _index2['default'].component(function (items /* cursor */) {
+var filters = {
+  all: function all() {
+    return true;
+  },
+  active: function active(item) {
+    return !item.get('complete');
+  },
+  completed: function completed(item) {
+    return item.get('complete');
+  }
+};
+
+exports['default'] = _index2['default'].component(function (root /* cursor */) {
+  var items = root.cursor('items');
+  var filter = filters[root.cursor('filter').deref()];
 
   var todos = [];
   var areAllComplete = true;
   items.forEach(function (item /* cursor */) {
-    // passon sub cursor
-    todos.push(_index2['default'].h(_todoItem2['default'], item));
+    if (filter(item)) {
+      // passon sub cursor
+      todos.push(_index2['default'].h(_todoItem2['default'], item));
+    }
     areAllComplete = areAllComplete && item.get('complete');
   });
 
@@ -270,7 +299,7 @@ exports['default'] = _index2['default'].component(function (items /* cursor */) 
 });
 module.exports = exports['default'];
 
-},{"../../../../index":118,"../actions/todoAction":1,"./todoItem":6}],6:[function(require,module,exports){
+},{"../../../../index":117,"../actions/todoAction":1,"./todoItem":6}],6:[function(require,module,exports){
 /** @jsx omom.h */
 'use strict';
 
@@ -340,7 +369,7 @@ exports['default'] = _index2['default'].component(function (item /* cursor */) {
 });
 module.exports = exports['default'];
 
-},{"../../../../index":118,"../actions/todoAction":1,"./todoTextInput":7}],7:[function(require,module,exports){
+},{"../../../../index":117,"../actions/todoAction":1,"./todoTextInput":7}],7:[function(require,module,exports){
 /** @jsx omom.h */
 'use strict';
 
@@ -389,7 +418,7 @@ exports['default'] = function () {
 
 module.exports = exports['default'];
 
-},{"../../../../index":118}],8:[function(require,module,exports){
+},{"../../../../index":117}],8:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -411,14 +440,14 @@ var _storesTodoStore2 = _interopRequireDefault(_storesTodoStore);
 var render = _index2['default'].loop(document.getElementById('todoapp'), _componentsApp2['default']);
 
 // render with initial state
-var update = render(_storesTodoStore2['default'].cursor('items'));
+var update = render(_storesTodoStore2['default'].cursor());
 
 // update v-dom upon every state change
 _storesTodoStore2['default'].observe(function () {
-  update = update(_storesTodoStore2['default'].cursor('items'));
+  update = update(_storesTodoStore2['default'].cursor());
 });
 
-},{"../../../index":118,"./components/app":3,"./stores/todoStore":117,"babel/polyfill":101}],9:[function(require,module,exports){
+},{"../../../index":117,"./components/app":3,"./stores/todoStore":116,"babel/polyfill":101}],9:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -4703,7 +4732,7 @@ function getInstance (obj, options) {
   obj.instances[newInstance.key] = newInstance;
   return newInstance;
 }
-},{"./src/structure":112}],108:[function(require,module,exports){
+},{"./src/structure":110}],108:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4935,6 +4964,373 @@ EventEmitter.EventEmitter3 = EventEmitter;
 module.exports = EventEmitter;
 
 },{}],109:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],110:[function(require,module,exports){
+'use strict';
+
+var Immutable = require('immutable');
+var Cursor = require('immutable/contrib/cursor');
+var EventEmitter = require('eventemitter3').EventEmitter;
+var inherits = require('inherits');
+var utils = require('./utils');
+
+/************************************
+ *
+ * ## Public API.
+ *   Constructor({ history: bool, key: string, data: structure|object })
+ *   .cursor(path)
+ *   .reference(path)
+ *   .forceHasSwapped(newData, oldData, keyPath)
+ *   .undo(steps)
+ *   .redo(steps)
+ *   .undoUntil(structure)
+ *
+ ************************************/
+function Structure (options) {
+  var self = this;
+
+  options = options || {};
+  if (!(this instanceof Structure)) {
+    return new Structure(options);
+  }
+
+  this.key = options.key || utils.generateRandomKey();
+
+  this.current = options.data;
+  if (!isImmutableStructure(this.current) || !this.current) {
+    this.current = Immutable.fromJS(this.current || {});
+  }
+
+  if (!!options.history) {
+    this.history = Immutable.List.of(this.current);
+    this._currentRevision = 0;
+  }
+
+  this._pathListeners = [];
+  this.on('swap', function (newData, oldData, keyPath) {
+    listListenerMatching(self._pathListeners, pathString(keyPath)).forEach(function (fns) {
+      fns.forEach(function (fn) {
+        if (typeof fn !== 'function') return;
+        fn(newData, oldData, keyPath);
+      });
+    });
+  });
+
+  EventEmitter.call(this, arguments);
+}
+inherits(Structure, EventEmitter);
+module.exports = Structure;
+
+Structure.prototype.cursor = function (path) {
+  var self = this;
+  path = path || [];
+
+  if (!this.current) {
+    throw new Error('No structure loaded.');
+  }
+
+  var changeListener = function (newRoot, oldRoot, path) {
+    if(self.current === oldRoot) {
+      self.current = newRoot;
+    } else if(!hasIn(newRoot, path)) {
+      // Othewise an out-of-sync change occured. We ignore `oldRoot`, and focus on
+      // changes at path `path`, and sync this to `self.current`.
+      self.current = self.current.removeIn(path);
+    } else {
+      // Update an existing path or add a new path within the current map.
+      self.current = self.current.setIn(path, newRoot.getIn(path));
+    }
+
+    return self.current;
+  };
+
+  changeListener = handleHistory(this, changeListener);
+  changeListener = handleSwap(this, changeListener);
+  changeListener = handlePersisting(this, changeListener);
+  return Cursor.from(self.current, path, changeListener);
+};
+
+Structure.prototype.reference = function (path) {
+  if (isCursor(path) && path._keyPath) {
+    path = path._keyPath;
+  }
+  var self = this, pathId = pathString(path);
+  var listenerNs = self._pathListeners[pathId];
+  var cursor = this.cursor(path);
+
+  var changeListener = function (newRoot, oldRoot, changedPath) { cursor = self.cursor(path); };
+  var referenceListeners = [changeListener];
+  this._pathListeners[pathId] = !listenerNs ? referenceListeners : listenerNs.concat(changeListener);
+
+  return {
+    observe: function (eventName, newFn) {
+      if (typeof eventName === 'function') {
+        newFn = eventName;
+        eventName = void 0;
+      }
+      if (this._dead || typeof newFn !== 'function') return;
+      if (eventName && eventName !== 'swap') {
+        newFn = onlyOnEvent(eventName, newFn);
+      }
+
+      self._pathListeners[pathId] = self._pathListeners[pathId].concat(newFn);
+      referenceListeners = referenceListeners.concat(newFn);
+
+      return function unobserve () {
+        var fnIndex = self._pathListeners[pathId].indexOf(newFn);
+        var localListenerIndex = referenceListeners.indexOf(newFn);
+
+        if (referenceListeners[localListenerIndex] === newFn) {
+          referenceListeners.splice(localListenerIndex, 1);
+        }
+
+        if (!self._pathListeners[pathId]) return;
+        if (self._pathListeners[pathId][fnIndex] !== newFn) return;
+        self._pathListeners[pathId].splice(fnIndex, 1);
+      };
+    },
+    cursor: function (subPath) {
+      if (subPath) return cursor.cursor(subPath);
+      return cursor;
+    },
+    unobserveAll: function () {
+      removeAllListenersBut(self, pathId, referenceListeners, changeListener);
+      referenceListeners = [changeListener];
+    },
+    destroy: function () {
+      removeAllListenersBut(self, pathId, referenceListeners);
+      referenceListeners = void 0;
+      cursor = void 0;
+
+      this._dead = true;
+      this.observe = void 0;
+      this.unobserveAll = void 0;
+      this.cursor = void 0;
+      this.destroy = void 0;
+    }
+  };
+};
+
+Structure.prototype.forceHasSwapped = function (newData, oldData, keyPath) {
+  this.emit('swap', newData || this.current, oldData, keyPath);
+  possiblyEmitAnimationFrameEvent(this, newData || this.current, oldData, keyPath);
+};
+
+Structure.prototype.undo = function(back) {
+  this._currentRevision -= back || 1;
+  if (this._currentRevision < 0) {
+    this._currentRevision = 0;
+  }
+
+  this.current = this.history.get(this._currentRevision);
+  return this.current;
+};
+
+Structure.prototype.redo = function(head) {
+  this._currentRevision += head || 1;
+  if (this._currentRevision > this.history.count() - 1) {
+    this._currentRevision = this.history.count() - 1;
+  }
+
+  this.current = this.history.get(this._currentRevision);
+  return this.current;
+};
+
+Structure.prototype.undoUntil = function(structure) {
+  this._currentRevision = this.history.indexOf(structure);
+  this.current = structure;
+
+  return structure;
+};
+
+
+/************************************
+ * Private decorators.
+ ***********************************/
+
+// Update history if history is active
+function handleHistory (emitter, fn) {
+  return function (newData, oldData, path) {
+    var newStructure = fn.apply(fn, arguments);
+    if (!emitter.history || (newData === oldData)) return newStructure;
+
+    emitter.history = emitter.history
+      .take(++emitter._currentRevision)
+      .push(emitter.current);
+
+    return newStructure;
+  };
+}
+
+// Update history if history is active
+var possiblyEmitAnimationFrameEvent = (function () {
+  var queuedChange = false;
+  if (typeof requestAnimationFrame !== 'function') {
+    return function () {};
+  }
+
+  return function requestAnimationFrameEmitter (emitter, newStructure, oldData) {
+    if (queuedChange) return;
+    queuedChange = true;
+
+    requestAnimationFrame(function () {
+      queuedChange = false;
+      emitter.emit('next-animation-frame', newStructure, oldData);
+    });
+  };
+}());
+
+// Emit swap event on values are swapped
+function handleSwap (emitter, fn) {
+  return function (newData, oldData, keyPath) {
+    var newStructure = fn.apply(fn, arguments);
+    if(newData === oldData) return newStructure;
+
+    emitter.emit('swap', newStructure, oldData, keyPath);
+    possiblyEmitAnimationFrameEvent(emitter, newStructure, oldData, keyPath);
+
+    return newStructure;
+  };
+}
+
+// Map changes to update events (delete/change/add).
+function handlePersisting (emitter, fn) {
+  return function (newData, oldData, path) {
+    var newStructure = fn.apply(fn, arguments);
+    if(newData === oldData) return newStructure;
+    var info = analyze(newData, oldData, path);
+
+    if (info.eventName) {
+      emitter.emit.apply(emitter, [info.eventName].concat(info.args));
+    }
+    return newStructure;
+  };
+}
+
+/************************************
+ * Private helpers.
+ ***********************************/
+
+function removeAllListenersBut(self, pathId, listeners, except) {
+  if (!listeners) return;
+  listeners.forEach(function (fn) {
+    if (except && fn === except) return;
+    var index = self._pathListeners[pathId].indexOf(fn);
+    self._pathListeners[pathId].splice(index, 1);
+  });
+}
+
+function analyze (newData, oldData, path) {
+  var oldObject = oldData && oldData.getIn(path);
+  var newObject = newData && newData.getIn(path);
+
+  var inOld = oldData && hasIn(oldData, path);
+  var inNew = newData && hasIn(newData, path);
+
+  var args, eventName;
+
+  if (inOld && !inNew) {
+    eventName = 'delete';
+    args = [path, oldObject];
+  } else if (inOld && inNew) {
+    eventName = 'change';
+    args = [path, newObject, oldObject];
+  } else if (!inOld && inNew) {
+    eventName = 'add';
+    args = [path, newObject];
+  }
+
+  return {
+    eventName: eventName,
+    args: args
+  };
+}
+
+
+// Check if path exists.
+var NOT_SET = {};
+function hasIn(cursor, path) {
+  if(cursor.hasIn) return cursor.hasIn(path);
+  return cursor.getIn(path, NOT_SET) !== NOT_SET;
+}
+
+function pathString(path) {
+  var topLevel = 'global';
+  if (!path || !path.length) return topLevel;
+  return [topLevel].concat(path).join('|');
+}
+
+function listListenerMatching (listeners, basePath) {
+  var newListeners = [];
+  for (var key in listeners) {
+    if (!listeners.hasOwnProperty(key)) continue;
+    if (basePath.indexOf(key) !== 0) continue;
+    newListeners.push(listeners[key]);
+  }
+
+  return newListeners;
+}
+
+function onlyOnEvent(eventName, fn) {
+  return function (newData, oldData, keyPath) {
+    var info = analyze(newData, oldData, keyPath);
+    if (info.eventName !== eventName) return;
+    return fn(newData, oldData, keyPath);
+  };
+}
+
+function isCursor (potential) {
+  return potential && typeof potential.deref === 'function';
+}
+
+// Check if passed structure is existing immutable structure.
+// From https://github.com/facebook/immutable-js/wiki/Upgrading-to-Immutable-v3#additional-changes
+function isImmutableStructure (data) {
+  return immutableSafeCheck('Iterable', 'isIterable', data) ||
+          immutableSafeCheck('Seq', 'isSeq', data) ||
+          immutableSafeCheck('Map', 'isMap', data) ||
+          immutableSafeCheck('OrderedMap', 'isOrderedMap', data) ||
+          immutableSafeCheck('List', 'isList', data) ||
+          immutableSafeCheck('Stack', 'isStack', data) ||
+          immutableSafeCheck('Set', 'isSet', data);
+}
+
+function immutableSafeCheck (ns, method, data) {
+  return Immutable[ns] && Immutable[ns][method] && Immutable[ns][method](data);
+}
+
+},{"./utils":111,"eventemitter3":108,"immutable":113,"immutable/contrib/cursor":112,"inherits":109}],111:[function(require,module,exports){
+'use strict';
+
+module.exports.generateRandomKey = function (len) {
+  len = len || 10;
+  return Math.random().toString(36).substring(2).substring(0, len);
+};
+
+},{}],112:[function(require,module,exports){
 /**
  *  Copyright (c) 2014-2015, Facebook, Inc.
  *  All rights reserved.
@@ -5275,7 +5671,7 @@ function valToKeyPath(val) {
 
 exports.from = cursorFrom;
 
-},{"immutable":110}],110:[function(require,module,exports){
+},{"immutable":113}],113:[function(require,module,exports){
 /**
  *  Copyright (c) 2014-2015, Facebook, Inc.
  *  All rights reserved.
@@ -10203,376 +10599,7 @@ exports.from = cursorFrom;
   return Immutable;
 
 }));
-},{}],111:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-},{}],112:[function(require,module,exports){
-'use strict';
-
-var Immutable = require('immutable');
-var Cursor = require('immutable/contrib/cursor');
-var EventEmitter = require('eventemitter3').EventEmitter;
-var inherits = require('inherits');
-var utils = require('./utils');
-
-/************************************
- *
- * ## Public API.
- *   Constructor({ history: bool, key: string, data: structure|object })
- *   .cursor(path)
- *   .reference(path)
- *   .forceHasSwapped(newData, oldData, keyPath)
- *   .undo(steps)
- *   .redo(steps)
- *   .undoUntil(structure)
- *
- ************************************/
-function Structure (options) {
-  var self = this;
-
-  options = options || {};
-  if (!(this instanceof Structure)) {
-    return new Structure(options);
-  }
-
-  this.key = options.key || utils.generateRandomKey();
-
-  this.current = options.data;
-  if (!isImmutableStructure(this.current) || !this.current) {
-    this.current = Immutable.fromJS(this.current || {});
-  }
-
-  if (!!options.history) {
-    this.history = Immutable.List.of(this.current);
-    this._currentRevision = 0;
-  }
-
-  this._pathListeners = [];
-  this.on('swap', function (newData, oldData, keyPath) {
-    listListenerMatching(self._pathListeners, pathString(keyPath)).forEach(function (fns) {
-      fns.forEach(function (fn) {
-        if (typeof fn !== 'function') return;
-        fn(newData, oldData, keyPath);
-      });
-    });
-  });
-
-  EventEmitter.call(this, arguments);
-}
-inherits(Structure, EventEmitter);
-module.exports = Structure;
-
-Structure.prototype.cursor = function (path) {
-  var self = this;
-  path = path || [];
-
-  if (!this.current) {
-    throw new Error('No structure loaded.');
-  }
-
-  var changeListener = function (newRoot, oldRoot, path) {
-    if(self.current === oldRoot) {
-      self.current = newRoot;
-    } else if(!hasIn(newRoot, path)) {
-      // Othewise an out-of-sync change occured. We ignore `oldRoot`, and focus on
-      // changes at path `path`, and sync this to `self.current`.
-      self.current = self.current.removeIn(path);
-    } else {
-      // Update an existing path or add a new path within the current map.
-      self.current = self.current.setIn(path, newRoot.getIn(path));
-    }
-
-    return self.current;
-  };
-
-  changeListener = handleHistory(this, changeListener);
-  changeListener = handleSwap(this, changeListener);
-  changeListener = handlePersisting(this, changeListener);
-  return Cursor.from(self.current, path, changeListener);
-};
-
-Structure.prototype.reference = function (path) {
-  if (isCursor(path) && path._keyPath) {
-    path = path._keyPath;
-  }
-  var self = this, pathId = pathString(path);
-  var listenerNs = self._pathListeners[pathId];
-  var cursor = this.cursor(path);
-
-  var changeListener = function (newRoot, oldRoot, changedPath) { cursor = self.cursor(path); };
-  var referenceListeners = [changeListener];
-  this._pathListeners[pathId] = !listenerNs ? referenceListeners : listenerNs.concat(changeListener);
-
-  return {
-    observe: function (eventName, newFn) {
-      if (typeof eventName === 'function') {
-        newFn = eventName;
-        eventName = void 0;
-      }
-      if (this._dead || typeof newFn !== 'function') return;
-      if (eventName && eventName !== 'swap') {
-        newFn = onlyOnEvent(eventName, newFn);
-      }
-
-      self._pathListeners[pathId] = self._pathListeners[pathId].concat(newFn);
-      referenceListeners = referenceListeners.concat(newFn);
-
-      return function unobserve () {
-        var fnIndex = self._pathListeners[pathId].indexOf(newFn);
-        var localListenerIndex = referenceListeners.indexOf(newFn);
-
-        if (referenceListeners[localListenerIndex] === newFn) {
-          referenceListeners.splice(localListenerIndex, 1);
-        }
-
-        if (!self._pathListeners[pathId]) return;
-        if (self._pathListeners[pathId][fnIndex] !== newFn) return;
-        self._pathListeners[pathId].splice(fnIndex, 1);
-      };
-    },
-    cursor: function (subPath) {
-      if (subPath) return cursor.cursor(subPath);
-      return cursor;
-    },
-    unobserveAll: function () {
-      removeAllListenersBut(self, pathId, referenceListeners, changeListener);
-      referenceListeners = [changeListener];
-    },
-    destroy: function () {
-      removeAllListenersBut(self, pathId, referenceListeners);
-      referenceListeners = void 0;
-      cursor = void 0;
-
-      this._dead = true;
-      this.observe = void 0;
-      this.unobserveAll = void 0;
-      this.cursor = void 0;
-      this.destroy = void 0;
-    }
-  };
-};
-
-Structure.prototype.forceHasSwapped = function (newData, oldData, keyPath) {
-  this.emit('swap', newData || this.current, oldData, keyPath);
-  possiblyEmitAnimationFrameEvent(this, newData || this.current, oldData, keyPath);
-};
-
-Structure.prototype.undo = function(back) {
-  this._currentRevision -= back || 1;
-  if (this._currentRevision < 0) {
-    this._currentRevision = 0;
-  }
-
-  this.current = this.history.get(this._currentRevision);
-  return this.current;
-};
-
-Structure.prototype.redo = function(head) {
-  this._currentRevision += head || 1;
-  if (this._currentRevision > this.history.count() - 1) {
-    this._currentRevision = this.history.count() - 1;
-  }
-
-  this.current = this.history.get(this._currentRevision);
-  return this.current;
-};
-
-Structure.prototype.undoUntil = function(structure) {
-  this._currentRevision = this.history.indexOf(structure);
-  this.current = structure;
-
-  return structure;
-};
-
-
-/************************************
- * Private decorators.
- ***********************************/
-
-// Update history if history is active
-function handleHistory (emitter, fn) {
-  return function (newData, oldData, path) {
-    var newStructure = fn.apply(fn, arguments);
-    if (!emitter.history || (newData === oldData)) return newStructure;
-
-    emitter.history = emitter.history
-      .take(++emitter._currentRevision)
-      .push(emitter.current);
-
-    return newStructure;
-  };
-}
-
-// Update history if history is active
-var possiblyEmitAnimationFrameEvent = (function () {
-  var queuedChange = false;
-  if (typeof requestAnimationFrame !== 'function') {
-    return function () {};
-  }
-
-  return function requestAnimationFrameEmitter (emitter, newStructure, oldData) {
-    if (queuedChange) return;
-    queuedChange = true;
-
-    requestAnimationFrame(function () {
-      queuedChange = false;
-      emitter.emit('next-animation-frame', newStructure, oldData);
-    });
-  };
-}());
-
-// Emit swap event on values are swapped
-function handleSwap (emitter, fn) {
-  return function (newData, oldData, keyPath) {
-    var newStructure = fn.apply(fn, arguments);
-    if(newData === oldData) return newStructure;
-
-    emitter.emit('swap', newStructure, oldData, keyPath);
-    possiblyEmitAnimationFrameEvent(emitter, newStructure, oldData, keyPath);
-
-    return newStructure;
-  };
-}
-
-// Map changes to update events (delete/change/add).
-function handlePersisting (emitter, fn) {
-  return function (newData, oldData, path) {
-    var newStructure = fn.apply(fn, arguments);
-    if(newData === oldData) return newStructure;
-    var info = analyze(newData, oldData, path);
-
-    if (info.eventName) {
-      emitter.emit.apply(emitter, [info.eventName].concat(info.args));
-    }
-    return newStructure;
-  };
-}
-
-/************************************
- * Private helpers.
- ***********************************/
-
-function removeAllListenersBut(self, pathId, listeners, except) {
-  if (!listeners) return;
-  listeners.forEach(function (fn) {
-    if (except && fn === except) return;
-    var index = self._pathListeners[pathId].indexOf(fn);
-    self._pathListeners[pathId].splice(index, 1);
-  });
-}
-
-function analyze (newData, oldData, path) {
-  var oldObject = oldData && oldData.getIn(path);
-  var newObject = newData && newData.getIn(path);
-
-  var inOld = oldData && hasIn(oldData, path);
-  var inNew = newData && hasIn(newData, path);
-
-  var args, eventName;
-
-  if (inOld && !inNew) {
-    eventName = 'delete';
-    args = [path, oldObject];
-  } else if (inOld && inNew) {
-    eventName = 'change';
-    args = [path, newObject, oldObject];
-  } else if (!inOld && inNew) {
-    eventName = 'add';
-    args = [path, newObject];
-  }
-
-  return {
-    eventName: eventName,
-    args: args
-  };
-}
-
-
-// Check if path exists.
-var NOT_SET = {};
-function hasIn(cursor, path) {
-  if(cursor.hasIn) return cursor.hasIn(path);
-  return cursor.getIn(path, NOT_SET) !== NOT_SET;
-}
-
-function pathString(path) {
-  var topLevel = 'global';
-  if (!path || !path.length) return topLevel;
-  return [topLevel].concat(path).join('|');
-}
-
-function listListenerMatching (listeners, basePath) {
-  var newListeners = [];
-  for (var key in listeners) {
-    if (!listeners.hasOwnProperty(key)) continue;
-    if (basePath.indexOf(key) !== 0) continue;
-    newListeners.push(listeners[key]);
-  }
-
-  return newListeners;
-}
-
-function onlyOnEvent(eventName, fn) {
-  return function (newData, oldData, keyPath) {
-    var info = analyze(newData, oldData, keyPath);
-    if (info.eventName !== eventName) return;
-    return fn(newData, oldData, keyPath);
-  };
-}
-
-function isCursor (potential) {
-  return potential && typeof potential.deref === 'function';
-}
-
-// Check if passed structure is existing immutable structure.
-// From https://github.com/facebook/immutable-js/wiki/Upgrading-to-Immutable-v3#additional-changes
-function isImmutableStructure (data) {
-  return immutableSafeCheck('Iterable', 'isIterable', data) ||
-          immutableSafeCheck('Seq', 'isSeq', data) ||
-          immutableSafeCheck('Map', 'isMap', data) ||
-          immutableSafeCheck('OrderedMap', 'isOrderedMap', data) ||
-          immutableSafeCheck('List', 'isList', data) ||
-          immutableSafeCheck('Stack', 'isStack', data) ||
-          immutableSafeCheck('Set', 'isSet', data);
-}
-
-function immutableSafeCheck (ns, method, data) {
-  return Immutable[ns] && Immutable[ns][method] && Immutable[ns][method](data);
-}
-
-},{"./utils":113,"eventemitter3":108,"immutable":110,"immutable/contrib/cursor":109,"inherits":111}],113:[function(require,module,exports){
-'use strict';
-
-module.exports.generateRandomKey = function (len) {
-  len = len || 10;
-  return Math.random().toString(36).substring(2).substring(0, len);
-};
-
 },{}],114:[function(require,module,exports){
-arguments[4][110][0].apply(exports,arguments)
-},{"dup":110}],115:[function(require,module,exports){
 (function (global){
 
 var rng;
@@ -10607,7 +10634,7 @@ module.exports = rng;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],116:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 //     uuid.js
 //
 //     Copyright (c) 2010-2012 Robert Kieffer
@@ -10792,7 +10819,7 @@ uuid.unparse = unparse;
 
 module.exports = uuid;
 
-},{"./rng":115}],117:[function(require,module,exports){
+},{"./rng":114}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10820,13 +10847,12 @@ var _actionsTodoAction2 = _interopRequireDefault(_actionsTodoAction);
 var toggle = function toggle(x) {
   return !x;
 };
-var struct = (0, _immstruct2['default'])({ items: {} });
+var struct = (0, _immstruct2['default'])({ items: {}, filter: 'all' });
+var rootRef = struct.reference();
 var itemsRef = struct.reference('items');
 
 // exports a reference to the current state
-exports['default'] = struct.reference();
-
-window.store = struct.reference();
+exports['default'] = rootRef;
 
 (0, _actionsTodoAction2['default'])({
   updateAll: function updateAll(updates) {
@@ -10894,11 +10920,17 @@ window.store = struct.reference();
         return item.get('complete');
       });
     });
+  },
+
+  onSetFilter: function onSetFilter() {
+    var name = arguments[0] === undefined ? 'all' : arguments[0];
+
+    rootRef.cursor().set('filter', name);
   }
 });
 module.exports = exports['default'];
 
-},{"../actions/todoAction":1,"immstruct":107,"immutable":114,"uuid":116}],118:[function(require,module,exports){
+},{"../actions/todoAction":1,"immstruct":107,"immutable":113,"uuid":115}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10930,7 +10962,7 @@ var _srcComponent2 = _interopRequireDefault(_srcComponent);
 exports['default'] = { h: _srcH2['default'], cx: _srcCx2['default'], loop: _srcMainLoop2['default'], action: _srcAction2['default'], component: _srcComponent2['default'] };
 module.exports = exports['default'];
 
-},{"./src/action":155,"./src/component":156,"./src/cx":157,"./src/h":158,"./src/main-loop":159}],119:[function(require,module,exports){
+},{"./src/action":154,"./src/component":155,"./src/cx":156,"./src/h":157,"./src/main-loop":158}],118:[function(require,module,exports){
 'use strict';
 
 //
@@ -11194,7 +11226,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],120:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 var now = require('performance-now')
   , global = typeof window === 'undefined' ? {} : window
   , vendors = ['moz', 'webkit']
@@ -11264,7 +11296,7 @@ module.exports.cancel = function() {
   caf.apply(global, arguments)
 }
 
-},{"performance-now":121}],121:[function(require,module,exports){
+},{"performance-now":120}],120:[function(require,module,exports){
 (function (process){
 // Generated by CoffeeScript 1.6.3
 (function() {
@@ -11304,22 +11336,22 @@ module.exports.cancel = function() {
 */
 
 }).call(this,require('_process'))
-},{"_process":103}],122:[function(require,module,exports){
+},{"_process":103}],121:[function(require,module,exports){
 var createElement = require("./vdom/create-element.js")
 
 module.exports = createElement
 
-},{"./vdom/create-element.js":134}],123:[function(require,module,exports){
+},{"./vdom/create-element.js":133}],122:[function(require,module,exports){
 var diff = require("./vtree/diff.js")
 
 module.exports = diff
 
-},{"./vtree/diff.js":154}],124:[function(require,module,exports){
+},{"./vtree/diff.js":153}],123:[function(require,module,exports){
 var h = require("./virtual-hyperscript/index.js")
 
 module.exports = h
 
-},{"./virtual-hyperscript/index.js":141}],125:[function(require,module,exports){
+},{"./virtual-hyperscript/index.js":140}],124:[function(require,module,exports){
 /*!
  * Cross-Browser Split 1.1.1
  * Copyright 2007-2012 Steven Levithan <stevenlevithan.com>
@@ -11427,7 +11459,7 @@ module.exports = (function split(undef) {
   return self;
 })();
 
-},{}],126:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 'use strict';
 
 var OneVersionConstraint = require('individual/one-version');
@@ -11449,7 +11481,7 @@ function EvStore(elem) {
     return hash;
 }
 
-},{"individual/one-version":128}],127:[function(require,module,exports){
+},{"individual/one-version":127}],126:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -11472,7 +11504,7 @@ function Individual(key, value) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],128:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 'use strict';
 
 var Individual = require('./index.js');
@@ -11496,7 +11528,7 @@ function OneVersion(moduleName, version, defaultValue) {
     return Individual(key, defaultValue);
 }
 
-},{"./index.js":127}],129:[function(require,module,exports){
+},{"./index.js":126}],128:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -11515,14 +11547,14 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":102}],130:[function(require,module,exports){
+},{"min-document":102}],129:[function(require,module,exports){
 "use strict";
 
 module.exports = function isObject(x) {
 	return typeof x === "object" && x !== null;
 };
 
-},{}],131:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 var nativeIsArray = Array.isArray
 var toString = Object.prototype.toString
 
@@ -11532,12 +11564,12 @@ function isArray(obj) {
     return toString.call(obj) === "[object Array]"
 }
 
-},{}],132:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 var patch = require("./vdom/patch.js")
 
 module.exports = patch
 
-},{"./vdom/patch.js":137}],133:[function(require,module,exports){
+},{"./vdom/patch.js":136}],132:[function(require,module,exports){
 var isObject = require("is-object")
 var isHook = require("../vnode/is-vhook.js")
 
@@ -11636,7 +11668,7 @@ function getPrototype(value) {
     }
 }
 
-},{"../vnode/is-vhook.js":145,"is-object":130}],134:[function(require,module,exports){
+},{"../vnode/is-vhook.js":144,"is-object":129}],133:[function(require,module,exports){
 var document = require("global/document")
 
 var applyProperties = require("./apply-properties")
@@ -11684,7 +11716,7 @@ function createElement(vnode, opts) {
     return node
 }
 
-},{"../vnode/handle-thunk.js":143,"../vnode/is-vnode.js":146,"../vnode/is-vtext.js":147,"../vnode/is-widget.js":148,"./apply-properties":133,"global/document":129}],135:[function(require,module,exports){
+},{"../vnode/handle-thunk.js":142,"../vnode/is-vnode.js":145,"../vnode/is-vtext.js":146,"../vnode/is-widget.js":147,"./apply-properties":132,"global/document":128}],134:[function(require,module,exports){
 // Maps a virtual DOM tree onto a real DOM tree in an efficient manner.
 // We don't want to read all of the DOM nodes in the tree so we use
 // the in-order tree indexing to eliminate recursion down certain branches.
@@ -11771,7 +11803,7 @@ function ascending(a, b) {
     return a > b ? 1 : -1
 }
 
-},{}],136:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 var applyProperties = require("./apply-properties")
 
 var isWidget = require("../vnode/is-widget.js")
@@ -11925,7 +11957,7 @@ function replaceRoot(oldRoot, newRoot) {
     return newRoot;
 }
 
-},{"../vnode/is-widget.js":148,"../vnode/vpatch.js":151,"./apply-properties":133,"./create-element":134,"./update-widget":138}],137:[function(require,module,exports){
+},{"../vnode/is-widget.js":147,"../vnode/vpatch.js":150,"./apply-properties":132,"./create-element":133,"./update-widget":137}],136:[function(require,module,exports){
 var document = require("global/document")
 var isArray = require("x-is-array")
 
@@ -12003,7 +12035,7 @@ function patchIndices(patches) {
     return indices
 }
 
-},{"./dom-index":135,"./patch-op":136,"global/document":129,"x-is-array":131}],138:[function(require,module,exports){
+},{"./dom-index":134,"./patch-op":135,"global/document":128,"x-is-array":130}],137:[function(require,module,exports){
 var isWidget = require("../vnode/is-widget.js")
 
 module.exports = updateWidget
@@ -12020,7 +12052,7 @@ function updateWidget(a, b) {
     return false
 }
 
-},{"../vnode/is-widget.js":148}],139:[function(require,module,exports){
+},{"../vnode/is-widget.js":147}],138:[function(require,module,exports){
 'use strict';
 
 var EvStore = require('ev-store');
@@ -12049,7 +12081,7 @@ EvHook.prototype.unhook = function(node, propertyName) {
     es[propName] = undefined;
 };
 
-},{"ev-store":126}],140:[function(require,module,exports){
+},{"ev-store":125}],139:[function(require,module,exports){
 'use strict';
 
 module.exports = SoftSetHook;
@@ -12068,7 +12100,7 @@ SoftSetHook.prototype.hook = function (node, propertyName) {
     }
 };
 
-},{}],141:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 'use strict';
 
 var isArray = require('x-is-array');
@@ -12205,7 +12237,7 @@ function errorString(obj) {
     }
 }
 
-},{"../vnode/is-thunk":144,"../vnode/is-vhook":145,"../vnode/is-vnode":146,"../vnode/is-vtext":147,"../vnode/is-widget":148,"../vnode/vnode.js":150,"../vnode/vtext.js":152,"./hooks/ev-hook.js":139,"./hooks/soft-set-hook.js":140,"./parse-tag.js":142,"x-is-array":131}],142:[function(require,module,exports){
+},{"../vnode/is-thunk":143,"../vnode/is-vhook":144,"../vnode/is-vnode":145,"../vnode/is-vtext":146,"../vnode/is-widget":147,"../vnode/vnode.js":149,"../vnode/vtext.js":151,"./hooks/ev-hook.js":138,"./hooks/soft-set-hook.js":139,"./parse-tag.js":141,"x-is-array":130}],141:[function(require,module,exports){
 'use strict';
 
 var split = require('browser-split');
@@ -12261,7 +12293,7 @@ function parseTag(tag, props) {
     return props.namespace ? tagName : tagName.toUpperCase();
 }
 
-},{"browser-split":125}],143:[function(require,module,exports){
+},{"browser-split":124}],142:[function(require,module,exports){
 var isVNode = require("./is-vnode")
 var isVText = require("./is-vtext")
 var isWidget = require("./is-widget")
@@ -12303,14 +12335,14 @@ function renderThunk(thunk, previous) {
     return renderedThunk
 }
 
-},{"./is-thunk":144,"./is-vnode":146,"./is-vtext":147,"./is-widget":148}],144:[function(require,module,exports){
+},{"./is-thunk":143,"./is-vnode":145,"./is-vtext":146,"./is-widget":147}],143:[function(require,module,exports){
 module.exports = isThunk
 
 function isThunk(t) {
     return t && t.type === "Thunk"
 }
 
-},{}],145:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 module.exports = isHook
 
 function isHook(hook) {
@@ -12319,7 +12351,7 @@ function isHook(hook) {
        typeof hook.unhook === "function" && !hook.hasOwnProperty("unhook"))
 }
 
-},{}],146:[function(require,module,exports){
+},{}],145:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = isVirtualNode
@@ -12328,7 +12360,7 @@ function isVirtualNode(x) {
     return x && x.type === "VirtualNode" && x.version === version
 }
 
-},{"./version":149}],147:[function(require,module,exports){
+},{"./version":148}],146:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = isVirtualText
@@ -12337,17 +12369,17 @@ function isVirtualText(x) {
     return x && x.type === "VirtualText" && x.version === version
 }
 
-},{"./version":149}],148:[function(require,module,exports){
+},{"./version":148}],147:[function(require,module,exports){
 module.exports = isWidget
 
 function isWidget(w) {
     return w && w.type === "Widget"
 }
 
-},{}],149:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 module.exports = "2"
 
-},{}],150:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
 var version = require("./version")
 var isVNode = require("./is-vnode")
 var isWidget = require("./is-widget")
@@ -12421,7 +12453,7 @@ function VirtualNode(tagName, properties, children, key, namespace) {
 VirtualNode.prototype.version = version
 VirtualNode.prototype.type = "VirtualNode"
 
-},{"./is-thunk":144,"./is-vhook":145,"./is-vnode":146,"./is-widget":148,"./version":149}],151:[function(require,module,exports){
+},{"./is-thunk":143,"./is-vhook":144,"./is-vnode":145,"./is-widget":147,"./version":148}],150:[function(require,module,exports){
 var version = require("./version")
 
 VirtualPatch.NONE = 0
@@ -12445,7 +12477,7 @@ function VirtualPatch(type, vNode, patch) {
 VirtualPatch.prototype.version = version
 VirtualPatch.prototype.type = "VirtualPatch"
 
-},{"./version":149}],152:[function(require,module,exports){
+},{"./version":148}],151:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = VirtualText
@@ -12457,7 +12489,7 @@ function VirtualText(text) {
 VirtualText.prototype.version = version
 VirtualText.prototype.type = "VirtualText"
 
-},{"./version":149}],153:[function(require,module,exports){
+},{"./version":148}],152:[function(require,module,exports){
 var isObject = require("is-object")
 var isHook = require("../vnode/is-vhook")
 
@@ -12517,7 +12549,7 @@ function getPrototype(value) {
   }
 }
 
-},{"../vnode/is-vhook":145,"is-object":130}],154:[function(require,module,exports){
+},{"../vnode/is-vhook":144,"is-object":129}],153:[function(require,module,exports){
 var isArray = require("x-is-array")
 
 var VPatch = require("../vnode/vpatch")
@@ -12946,7 +12978,7 @@ function appendPatch(apply, patch) {
     }
 }
 
-},{"../vnode/handle-thunk":143,"../vnode/is-thunk":144,"../vnode/is-vnode":146,"../vnode/is-vtext":147,"../vnode/is-widget":148,"../vnode/vpatch":151,"./diff-props":153,"x-is-array":131}],155:[function(require,module,exports){
+},{"../vnode/handle-thunk":142,"../vnode/is-thunk":143,"../vnode/is-vnode":145,"../vnode/is-vtext":146,"../vnode/is-widget":147,"../vnode/vpatch":150,"./diff-props":152,"x-is-array":130}],154:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -12986,7 +13018,7 @@ exports['default'] = function () {
 
 module.exports = exports['default'];
 
-},{"eventemitter3":119}],156:[function(require,module,exports){
+},{"eventemitter3":118}],155:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13011,7 +13043,7 @@ exports["default"] = function (render) {
 
 module.exports = exports["default"];
 
-},{}],157:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 /*
  * Class name helper
  * @param {object}
@@ -13034,7 +13066,7 @@ exports['default'] = function (obj) {
 
 module.exports = exports['default'];
 
-},{}],158:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -13061,7 +13093,7 @@ exports['default'] = function (tag) {
 
 module.exports = exports['default'];
 
-},{"virtual-dom/h":124}],159:[function(require,module,exports){
+},{"virtual-dom/h":123}],158:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -13140,4 +13172,4 @@ exports['default'] = function (root, render) {
 
 module.exports = exports['default'];
 
-},{"raf":120,"virtual-dom/create-element":122,"virtual-dom/diff":123,"virtual-dom/patch":132}]},{},[8]);
+},{"raf":119,"virtual-dom/create-element":121,"virtual-dom/diff":122,"virtual-dom/patch":131}]},{},[8]);

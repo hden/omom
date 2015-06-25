@@ -24,6 +24,7 @@ const todoActions = [
 , 'toggleAll'
 , 'destroy'
 , 'destroyCompleted'
+, 'setFilter'
 ]
 
 export default omom.action(todoActions, spy)

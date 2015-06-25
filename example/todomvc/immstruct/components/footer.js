@@ -5,8 +5,9 @@ import TextInput from './todoTextInput'
 
 const log = window.debug('todomvc:footer')
 
-export default omom.component((items /* cursor */) => {
-
+export default omom.component((root /* cursor */) => {
+  const items   = root.cursor('items')
+  const filter  = root.cursor('filter').deref()
   const total   = items.size
   let completed = 0
   items.forEach((item) => {
@@ -36,19 +37,31 @@ export default omom.component((items /* cursor */) => {
       </span>
       <ul id="filters">
         <li>
-          <a href="#/">
+          <a
+            href="#/"
+            className={omom.cx({ selected: filter === 'all' })}
+            onclick={emit.setFilter.bind(emit, 'all')}
+            >
             All
           </a>
         </li>
         {' '}
         <li>
-          <a href="#/active">
+          <a
+            href="#/active"
+            className={omom.cx({ selected: filter === 'active' })}
+            onclick={emit.setFilter.bind(emit, 'active')}
+            >
             Active
           </a>
         </li>
         {' '}
         <li>
-          <a href="#/completed">
+          <a
+            href="#/completed"
+            className={omom.cx({ selected: filter === 'completed' })}
+            onclick={emit.setFilter.bind(emit, 'completed')}
+            >
             Completed
           </a>
         </li>
