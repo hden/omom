@@ -1,7 +1,21 @@
 # omom [![Circle CI](https://circleci.com/gh/hden/omom.svg?style=svg)](https://circleci.com/gh/hden/omom)
 Bite-sized virtual-dom
 
+## Why omom
+
+* It is based on the [blazing fast](http://vdom-benchmark.github.io/vdom-benchmark/) virtual-dom implementation.
+* It provides **optional** unidirectional event dispatcher, inspired by Flux and alt.js.
+* It has no opinion on the tool you choose e.g. omom + immstruct, omom + Backbone.
+* It is a very small collection of functions, no mixin, no inheritance, just functional composition.
+
 ## Example
+
+### TodoMVC
+
+* [omom + immstruct](https://github.com/hden/omom/tree/master/example/todomvc/immstruct)
+* omom + pojo [coming soon]
+* omom + Backbone [coming soon]
+* omom + router [coming soon]
 
 ### Hello world
 
@@ -38,14 +52,9 @@ update({className: 'foobar', items: ['foo', 'bar', 'baz']})
 
     npm install --save omom
 
-## Development
+## Running Tests
 
-    npm install
-    npm test
-
-### browser tests
-
-    make test
+Tests are served by zuul. Run `make test` and visit http://localhost:8080/__zuul.
 
 ## Inspirations
 
