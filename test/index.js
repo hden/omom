@@ -16,6 +16,7 @@ if (!Object.is) {
 
 // test suites
 import './h'
+import './cx'
 import './action'
 import './component'
 import './main-loop'
