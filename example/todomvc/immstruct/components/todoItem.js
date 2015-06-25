@@ -10,7 +10,22 @@ export default omom.component((item /* cursor */) => {
   , editing  : item.get('editing')
   })
 
-  const id = item.get('id')
+  const id     = item.get('id')
+  const onSave = (text = '') => {
+    emit.updateText(id, text)
+    emit.toggleEditing(id, false)
+  }
+
+  let input
+  if (item.get('editing')) {
+    input = (
+      <TextInput
+        className="edit"
+        onSave={onSave}
+        value={item.get('text')}
+      />
+    )
+  }
 
   return (
     <li className={className} key={id}>
@@ -19,13 +34,14 @@ export default omom.component((item /* cursor */) => {
           className="toggle"
           type="checkbox"
           checked={item.get('complete')}
-          onchange={emit.toggleComplete.bind(null, id)}
+          onchange={emit.toggleComplete.bind(emit, id)}
         />
-        <label>
+        <label ondblclick={emit.toggleEditing.bind(emit, id, true)}>
           {item.get('text')}
         </label>
         <button className="destroy" onclick={emit.destroy.bind(null, id)} />
       </div>
+      {input}
     </li>
   )
 })

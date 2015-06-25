@@ -27,6 +27,7 @@ export default (props = {}) => {
       placeholder={props.placeholder}
       onblur={onSave}
       onkeydown={onChange}
+      value={props.value}
       autofocus={true}
     />
   )

@@ -48,6 +48,12 @@ describe('store', () => {
     expect(item).to.deep.equal({ id, text: 'foobar', complete: true, editing: false })
   })
 
+  it('should toggle editing', () => {
+    action.toggleEditing(id)
+    const item = deref('items', id)
+    expect(item).to.deep.equal({ id, text: 'foobar', complete: false, editing: true })
+  })
+
   it('should toggle all', () => {
     action.toggleAll(true)
     const item = deref('items', id)

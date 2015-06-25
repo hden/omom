@@ -20,6 +20,7 @@ const todoActions = [
   'create'
 , 'updateText'
 , 'toggleComplete'
+, 'toggleEditing'
 , 'toggleAll'
 , 'destroy'
 , 'destroyCompleted'

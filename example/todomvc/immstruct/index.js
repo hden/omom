@@ -1,3 +1,4 @@
+import 'babel/polyfill'
 import omom from '../../../index'
 import app  from './components/app'
 import ref  from './stores/todoStore'
