@@ -10,6 +10,8 @@ const itemsRef = struct.reference('items')
 // exports a reference to the current state
 export default struct.reference()
 
+window.store = struct.reference()
+
 subscribe({
   updateAll(updates) {
     itemsRef.cursor().update((items) => {
@@ -36,9 +38,9 @@ subscribe({
     itemsRef.cursor([id, 'complete']).update(toggle)
   }
 
-, onToggleEditing(id) {
+, onToggleEditing(id, editing = true) {
     itemsRef.cursor().update((items) => {
-      return items.map(item => item.set('editing', item.get('id') === id))
+      return items.map(item => item.set('editing', item.get('id') === id ? editing : false))
     })
   }
 

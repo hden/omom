@@ -300,6 +300,21 @@ exports['default'] = _index2['default'].component(function (item /* cursor */) {
   });
 
   var id = item.get('id');
+  var onSave = function onSave() {
+    var text = arguments[0] === undefined ? '' : arguments[0];
+
+    _actionsTodoAction2['default'].updateText(id, text);
+    _actionsTodoAction2['default'].toggleEditing(id, false);
+  };
+
+  var input = undefined;
+  if (item.get('editing')) {
+    input = _index2['default'].h(_todoTextInput2['default'], {
+      className: 'edit',
+      onSave: onSave,
+      value: item.get('text')
+    });
+  }
 
   return _index2['default'].h(
     'li',
@@ -311,15 +326,16 @@ exports['default'] = _index2['default'].component(function (item /* cursor */) {
         className: 'toggle',
         type: 'checkbox',
         checked: item.get('complete'),
-        onchange: _actionsTodoAction2['default'].toggleComplete.bind(null, id)
+        onchange: _actionsTodoAction2['default'].toggleComplete.bind(_actionsTodoAction2['default'], id)
       }),
       _index2['default'].h(
         'label',
-        null,
+        { ondblclick: _actionsTodoAction2['default'].toggleEditing.bind(_actionsTodoAction2['default'], id, true) },
         item.get('text')
       ),
       _index2['default'].h('button', { className: 'destroy', onclick: _actionsTodoAction2['default'].destroy.bind(null, id) })
-    )
+    ),
+    input
   );
 });
 module.exports = exports['default'];
@@ -7188,6 +7204,8 @@ var itemsRef = struct.reference('items');
 // exports a reference to the current state
 exports['default'] = struct.reference();
 
+window.store = struct.reference();
+
 (0, _actionsTodoAction2['default'])({
   updateAll: function updateAll(updates) {
     itemsRef.cursor().update(function (items) {
@@ -7227,9 +7245,11 @@ exports['default'] = struct.reference();
   },
 
   onToggleEditing: function onToggleEditing(id) {
+    var editing = arguments[1] === undefined ? true : arguments[1];
+
     itemsRef.cursor().update(function (items) {
       return items.map(function (item) {
-        return item.set('editing', item.get('id') === id);
+        return item.set('editing', item.get('id') === id ? editing : false);
       });
     });
   },
