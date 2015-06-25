@@ -1,5 +1,5 @@
+import omom      from '../index'
 import Immutable from 'immutable'
-import component from '../src/component'
 
 describe('component', () => {
   const { expect }  = chai
@@ -7,12 +7,12 @@ describe('component', () => {
   const passthrough = (d) => { return d }
 
   it('is a function', () => {
-    expect(component).to.be.a('function')
+    expect(omom.component).to.be.a('function')
   })
 
   it('should render upon init', () => {
     let spy    = sinon.spy(passthrough)
-    let render = component(spy)
+    let render = omom.component(spy)
     let result = render(fixture)
 
     expect(spy).to.have.property('calledOnce', true)
@@ -21,7 +21,7 @@ describe('component', () => {
 
   it('should cache result', () => {
     let spy    = sinon.spy(passthrough)
-    let render = component(spy)
+    let render = omom.component(spy)
     render(fixture)
     render(fixture)
     render(fixture)
@@ -33,7 +33,7 @@ describe('component', () => {
 
   it('should re-render', () => {
     let spy    = sinon.spy(passthrough)
-    let render = component(spy)
+    let render = omom.component(spy)
     render(fixture)
     render(fixture)
     render(fixture)
@@ -54,7 +54,7 @@ describe('component', () => {
   it('should work with custom equality fn', () => {
     let spy    = sinon.spy(passthrough)
     let is     = sinon.spy(Immutable.is)
-    let render = component(spy, is)
+    let render = omom.component(spy, is)
     let data   = Immutable.fromJS(fixture)
     // cache result first
     render(data)

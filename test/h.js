@@ -1,5 +1,5 @@
-/** @jsx h */
-import h     from '../src/h'
+/** @jsx omom.h */
+import omom  from '../index'
 import VNode from 'virtual-dom/vnode/vnode.js'
 
 describe('h', () => {
@@ -7,6 +7,10 @@ describe('h', () => {
 
   it('should render', () => {
     expect(<div/>).to.be.an.instanceof(VNode)
+  })
+
+  it('is a function', () => {
+    expect(omom.h).to.be.a('function')
   })
 
   it('should render child', () => {
