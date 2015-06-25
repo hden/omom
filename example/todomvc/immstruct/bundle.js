@@ -37,7 +37,7 @@ spy.emit = function () {
   return emit.apply(spy, args);
 };
 
-var todoActions = ['create', 'updateText', 'toggleComplete', 'toggleAll', 'destroy', 'destroyCompleted'];
+var todoActions = ['create', 'updateText', 'toggleComplete', 'toggleEditing', 'toggleAll', 'destroy', 'destroyCompleted'];
 
 exports['default'] = _index2['default'].action(todoActions, spy);
 module.exports = exports['default'];
@@ -7224,6 +7224,14 @@ exports['default'] = struct.reference();
 
   onToggleComplete: function onToggleComplete(id) {
     itemsRef.cursor([id, 'complete']).update(toggle);
+  },
+
+  onToggleEditing: function onToggleEditing(id) {
+    itemsRef.cursor().update(function (items) {
+      return items.map(function (item) {
+        return item.set('editing', item.get('id') === id);
+      });
+    });
   },
 
   onToggleAll: function onToggleAll() {

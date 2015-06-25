@@ -36,6 +36,12 @@ subscribe({
     itemsRef.cursor([id, 'complete']).update(toggle)
   }
 
+, onToggleEditing(id) {
+    itemsRef.cursor().update((items) => {
+      return items.map(item => item.set('editing', item.get('id') === id))
+    })
+  }
+
 , onToggleAll(complete = true) {
     this.updateAll({ complete })
   }
