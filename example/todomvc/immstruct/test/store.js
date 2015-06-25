@@ -73,4 +73,11 @@ describe('store', () => {
     expect(item).to.be.undefined
   })
 
+  it('should set filter', () => {
+    // defaults to all
+    expect(ref.cursor('filter').deref()).to.equal('all')
+
+    action.setFilter('active')
+    expect(ref.cursor('filter').deref()).to.equal('active')
+  })
 })

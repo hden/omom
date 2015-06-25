@@ -3,13 +3,23 @@ import omom     from '../../../../index'
 import emit     from '../actions/todoAction'
 import TodoItem from './todoItem'
 
-export default omom.component((items /* cursor */) => {
+const filters = {
+  all() { return true }
+, active(item) { return !item.get('complete') }
+, completed(item) { return item.get('complete') }
+}
 
-  let todos = []
+export default omom.component((root /* cursor */) => {
+  const items  = root.cursor('items')
+  const filter = filters[root.cursor('filter').deref()]
+
+  let todos          = []
   let areAllComplete = true
   items.forEach((item /* cursor */) => {
-    // passon sub cursor
-    todos.push(<TodoItem {...item} />)
+    if (filter(item)) {
+      // passon sub cursor
+      todos.push(<TodoItem {...item} />)
+    }
     areAllComplete = areAllComplete && item.get('complete')
   })
 

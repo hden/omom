@@ -3,14 +3,16 @@ import immstruct from 'immstruct'
 import immutable from 'immutable'
 import subscribe from '../actions/todoAction'
 
+// the store can be implemented by any framework of your choice
+// omom has no opinion on the choice of tools
+// here we use [immustruct](https://github.com/omniscientjs/immstruct/) for demo
 const toggle   = x => !x
-const struct   = immstruct({ items: {} })
+const struct   = immstruct({ items: {}, filter: 'all' })
+const rootRef  = struct.reference()
 const itemsRef = struct.reference('items')
 
 // exports a reference to the current state
-export default struct.reference()
-
-window.store = struct.reference()
+export default rootRef
 
 subscribe({
   updateAll(updates) {
@@ -58,5 +60,11 @@ subscribe({
     itemsRef.cursor().update((items) => {
       return items.filterNot(item => item.get('complete'))
     })
+  }
+
+  // the state change can be triggered by any router of your choice
+  // omom has no opinion on the choice of tools
+, onSetFilter(name = 'all') {
+    rootRef.cursor().set('filter', name)
   }
 })

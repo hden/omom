@@ -6,12 +6,12 @@ import Header      from './header'
 import Footer      from './Footer'
 import MainSection from './mainSection'
 
-export default omom.component((items /* cursor */) => {
+export default omom.component((root /* cursor */) => {
   return (
     <div>
       <Header />
-      <MainSection {...items} />
-      <Footer {...items}/>
+      <MainSection {...root} />
+      <Footer {...root}/>
     </div>
   )
 })
