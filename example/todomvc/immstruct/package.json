@@ -1,0 +1,26 @@
+{
+  "name": "immstruct",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "browserify": "^10.2.4",
+    "debug": "^2.2.0",
+    "immutable": "^3.7.4",
+    "immstruct": "^1.4.1",
+    "uuid": "^2.0.1",
+    "zuul": "^3.1.0",
+    "todomvc-app-css": "^1.0.0",
+    "todomvc-common": "^1.0.1",
+    "eslint": "^0.23.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hao-kang Den <haokang.den@gmail.com>",
+  "license": "MIT"
+}

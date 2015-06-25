@@ -1,0 +1,11 @@
+ui: mocha-bdd
+browsers:
+  - name: chrome
+    version: latest
+browserify:
+  - transform: babelify
+scripts:
+  - "http://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.min.js"
+  - "http://cdnjs.cloudflare.com/ajax/libs/chai/3.0.0/chai.js"
+  - "http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
+  - "http://sinonjs.org/releases/sinon-1.15.0.js"
