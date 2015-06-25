@@ -1,8 +1,7 @@
-/** @jsx h */
+/** @jsx omom.h */
 import raf    from 'raf'
 import helper from './helper'
-import h      from '../src/h'
-import loop   from '../src/main-loop'
+import omom   from '../index'
 
 describe('main-loop', () => {
   const { expect } = chai
@@ -19,7 +18,7 @@ describe('main-loop', () => {
   })
 
   it('is a function', () => {
-    expect(loop).to.be.a('function')
+    expect(omom.loop).to.be.a('function')
   })
 
   it('can set up the main loop', (done) => {
@@ -42,7 +41,7 @@ describe('main-loop', () => {
       )
     }
 
-    let createInitialState = loop(el, render)
+    let createInitialState = omom.loop(el, render)
     expect(createInitialState).to.be.a('function')
 
     let update   = createInitialState(data)
