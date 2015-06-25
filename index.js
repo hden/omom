@@ -1,5 +1,7 @@
-import h         from './h'
-import loop      from './loop'
-import component from './component'
+import h         from './src/h'
+import h         from './src/cx'
+import loop      from './src/loop'
+import action    from './src/action'
+import component from './src/component'
 
-export default {h, loop, component}
+export default {h, cx, loop, action, component}
