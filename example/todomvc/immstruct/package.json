@@ -7,19 +7,22 @@
     "test": "test"
   },
   "dependencies": {
-    "browserify": "^10.2.4",
     "debug": "^2.2.0",
-    "immutable": "^3.7.4",
     "immstruct": "^1.4.1",
-    "uuid": "^2.0.1",
-    "zuul": "^3.1.0",
+    "immutable": "^3.7.4",
     "todomvc-app-css": "^1.0.0",
     "todomvc-common": "^1.0.1",
-    "eslint": "^0.23.0"
+    "uuid": "^2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel": "^5.6.7",
+    "browserify": "^10.2.4",
+    "eslint": "^0.23.0",
+    "zuul": "^3.1.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make ci",
+    "build": "make bundle.js"
   },
   "author": "Hao-kang Den <haokang.den@gmail.com>",
   "license": "MIT"
