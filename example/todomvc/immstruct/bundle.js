@@ -382,6 +382,7 @@ exports['default'] = function () {
     placeholder: props.placeholder,
     onblur: onSave,
     onkeydown: onChange,
+    value: props.value,
     autofocus: true
   });
 };
