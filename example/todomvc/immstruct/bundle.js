@@ -391,17 +391,18 @@ var ENTER_KEY_CODE = 13;
 exports['default'] = function () {
   var props = arguments[0] === undefined ? {} : arguments[0];
 
-  var onSave = function onSave(el) {
-    if (el.target.value && el.target.value !== '') {
-      props.onSave(el.target.value);
+  var onSave = function onSave(event) {
+    var el = event.target;
+    if (el.value && el.value !== '') {
+      props.onSave(el.value);
       // clear input value after save
-      el.target.value = '';
+      el.value = '';
     }
   };
 
-  var onChange = function onChange(el) {
+  var onChange = function onChange(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
-      onSave(el);
+      onSave(event);
     }
   };
 
@@ -10844,6 +10845,9 @@ var _actionsTodoAction = require('../actions/todoAction');
 
 var _actionsTodoAction2 = _interopRequireDefault(_actionsTodoAction);
 
+// the store can be implemented by any framework of your choice
+// omom has no opinion on the choice of tools
+// here we use [immustruct](https://github.com/omniscientjs/immstruct/) for demo
 var toggle = function toggle(x) {
   return !x;
 };
@@ -10920,9 +10924,11 @@ exports['default'] = rootRef;
         return item.get('complete');
       });
     });
-  },
+  }
 
-  onSetFilter: function onSetFilter() {
+  // the state change can be triggered by any router of your choice
+  // omom has no opinion on the choice of tools
+  , onSetFilter: function onSetFilter() {
     var name = arguments[0] === undefined ? 'all' : arguments[0];
 
     rootRef.cursor().set('filter', name);

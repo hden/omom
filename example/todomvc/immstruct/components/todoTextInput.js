@@ -6,17 +6,18 @@ const ENTER_KEY_CODE = 13
 // intentionally using pojo as props for demonstration
 // this component will always rerender
 export default (props = {}) => {
-  const onSave = (el) => {
-    if (el.target.value && el.target.value !== '') {
-      props.onSave(el.target.value)
+  const onSave = (event) => {
+    const el = event.target
+    if (el.value && el.value !== '') {
+      props.onSave(el.value)
       // clear input value after save
-      el.target.value = ''
+      el.value = ''
     }
   }
 
-  const onChange = (el) => {
+  const onChange = (event) => {
     if (event.keyCode === ENTER_KEY_CODE) {
-      onSave(el)
+      onSave(event)
     }
   }
 
