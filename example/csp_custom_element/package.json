@@ -1,0 +1,24 @@
+{
+  "name": "csp_custom_element",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -d -e index.js > bundle.js",
+    "start": "python -m SimpleHTTPServer"
+  },
+  "author": "",
+  "license": "MIT",
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "devDependencies": {
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.4",
+    "chan": "^0.6.1",
+    "co": "^4.5.4"
+  }
+}
