@@ -22,6 +22,11 @@
     "url": "https://github.com/hden/omom/issues"
   },
   "homepage": "https://github.com/hden/omom#readme",
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
   "dependencies": {
     "eventemitter3": "^1.1.1",
     "raf": "^3.0.0",
