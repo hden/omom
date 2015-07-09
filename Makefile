@@ -2,6 +2,9 @@ NODEBIN   := ./node_modules/.bin
 source    := $(shell find src -name '*.js')
 testsuite := $(shell find test -name '*.js')
 
+saucelabs: test/index.js
+	$(NODEBIN)/zuul --concurrency 5 -- test/index.js
+
 test: test/index.js
 	$(NODEBIN)/zuul --local 8080 -- test/index.js
 
@@ -17,4 +20,4 @@ clean:
 silent:
 	@:
 
-.PHONY: silent clean lint ci test
+.PHONY: silent clean lint ci test saucelabs

@@ -2,10 +2,16 @@ ui: mocha-bdd
 browsers:
   - name: chrome
     version: latest
+  - name: safari
+    version: latest
+  - name: firefox
+    version: latest
+  - name: internet explorer
+    version: latest
 browserify:
   - transform: babelify
 scripts:
-  - "http://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.min.js"
-  - "http://cdnjs.cloudflare.com/ajax/libs/chai/3.0.0/chai.js"
-  - "http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
-  - "http://sinonjs.org/releases/sinon-1.15.0.js"
+  - "https://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.min.js"
+  - "https://cdnjs.cloudflare.com/ajax/libs/chai/3.0.0/chai.js"
+  - "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
+  - "https://cdn.rawgit.com/hden/8c007a1579d4fa769305/raw/6bdc3a4ee1f6f309fa1be7bf419575a694b39548/sinon-1.15.4.js"
