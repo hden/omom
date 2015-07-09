@@ -4,7 +4,7 @@
   "description": "Bite-sized virtual-dom",
   "main": "index.js",
   "scripts": {
-    "test": "make ci"
+    "test": "make saucelabs"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,6 @@
     "immutable": "^3.7.4",
     "phantomjs": "^1.9.17",
     "phantomjs-polyfill": "0.0.1",
-    "zuul": "^3.0.0"
+    "zuul": "^3.2.0"
   }
 }
